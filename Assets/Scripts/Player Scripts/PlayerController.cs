@@ -186,12 +186,16 @@ public class PlayerController : MonoBehaviour
             target.gameObject.SetActive(false);
 
             create_Node_At_Nail = true;
+
+            GamePlayerController.instance.IncreaseScore();
+            AudioManager.instance.Play_PickUpSound();
         }
 
 
-        if (target.tag == Tags.WALL || target.tag == Tags.BOMB)
+        if (target.tag == Tags.WALL || target.tag == Tags.BOMB || target.tag == Tags.TAIL)
         {
-            print("Touched Wall");
+            Time.timeScale = 0f;
+            AudioManager.instance.Play_DeadpSound();
         }
         
     }
