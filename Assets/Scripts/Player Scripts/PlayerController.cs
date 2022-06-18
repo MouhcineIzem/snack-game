@@ -42,13 +42,31 @@ public class PlayerController : MonoBehaviour
 
         InitSnackNodes();
         InitPlayer();
-        
+
+
+        delta_Position = new List<Vector3>(){
+            new Vector3(-step_Length, 0f),      // -dx .. LFET
+            new Vector3(0f, step_Length),      // dy .. UP
+            new Vector3(step_Length, 0f),     // dx .. RIGHT
+            new Vector3(0f, -step_Length),   // -dy .. DOWN
+        };
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        CheckMovementFrequency();
+    }
+
+    void FixedUpdate()
+    {
+        if (move)
+        {
+            move = false;
+            Move();
+        }
     }
 
     void InitSnackNodes()
@@ -94,5 +112,87 @@ public class PlayerController : MonoBehaviour
                 nodes[2].position = nodes[0].position + new Vector3(0f, Metrics.NODE * 2f, 0f);
                 break;
         }
+    }
+
+    void Move()
+    {
+        Vector3 dPosition = delta_Position[(int)direction];
+
+        Vector3 parentPos = head_Body.position;
+        Vector3 prevPosition;
+
+        main_Body.position = main_Body.position + dPosition;
+        head_Body.position = head_Body.position + dPosition;
+
+        for (int i = 1; i < nodes.Count; i++)
+        {
+            prevPosition = nodes[i].position;
+
+            nodes[i].position = parentPos;
+            parentPos = prevPosition;
+        }
+
+        // check if we need to create a new node
+        // because we ate a fruit
+        if (create_Node_At_Nail)
+        {
+            create_Node_At_Nail = false;
+
+            GameObject newNode = Instantiate(tailPrefab, nodes[nodes.Count - 1].position, Quaternion.identity);
+
+            newNode.transform.SetParent(transform, true);
+            nodes.Add(newNode.GetComponent<Rigidbody>());
+        }
+    }
+
+    void CheckMovementFrequency()
+    {
+        counter += Time.deltaTime;
+
+        if(counter >= movement_Frequency)
+        {
+            counter = 0f;
+            move = true;
+        }
+    }
+
+    public void SetInputDirection(PlayerDirection dir)
+    {
+        if (dir == PlayerDirection.UP && direction == PlayerDirection.DOWN ||
+            dir == PlayerDirection.DOWN && direction == PlayerDirection.UP ||
+            dir == PlayerDirection.RIGHT && direction == PlayerDirection.LEFT ||
+            dir == PlayerDirection.LEFT && direction == PlayerDirection.RIGHT)
+        {
+            return;
+        }
+
+        direction = dir;
+
+        ForceMove();
+    }
+
+    void ForceMove()
+    {
+        counter = 0;
+        move = false;
+        Move();
+    }
+
+    void OnTriggerEnter(Collider target)
+    {
+
+        if (target.tag == Tags.FRUIT)
+        {
+            target.gameObject.SetActive(false);
+
+            create_Node_At_Nail = true;
+        }
+
+
+        if (target.tag == Tags.WALL || target.tag == Tags.BOMB)
+        {
+            print("Touched Wall");
+        }
+        
     }
 }

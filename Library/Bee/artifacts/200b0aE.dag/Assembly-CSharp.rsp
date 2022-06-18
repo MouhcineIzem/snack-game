@@ -350,6 +350,7 @@
 -r:"Library/Bee/artifacts/200b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/Helper Scripts/Tags.cs"
 "Assets/Scripts/Player Scripts/PlayerController.cs"
+"Assets/Scripts/Player Scripts/PlayerInput.cs"
 -langversion:9.0
 
 /deterministic
