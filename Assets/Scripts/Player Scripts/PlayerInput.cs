@@ -32,13 +32,13 @@ public class PlayerInput : MonoBehaviour
         horizental = 0;
         vertical = 0;
 
-        Getkeyboardinput();
+        GetKeyBoardInput();
         SetMovement();
 
 
     }
 
-    void Getkeyboardinput()
+    void GetKeyBoardInput()
     {
         //horizental = (int)Input.GetAxisRaw("Horizontal");
         //vertical = (int)Input.GetAxisRaw("Vertical");

@@ -11,8 +11,8 @@ public class GamePlayerController : MonoBehaviour
     public GameObject fruit_Pickup, bomb_Pickup;
 
 
-    private float min_X = 1.70f, max_X = 9.5f, min_Y = -0.44f, max_Y = 3.9f;
-    private float z_Pos = 0.31f;
+    private float min_X = -4.17f, max_X = 4.21f, min_Y = 2.17f, max_Y = -2.2f;
+    private float z_Pos = 5.75f;
 
     private Text score_Text;
     private int scoreCount;
@@ -31,7 +31,6 @@ public class GamePlayerController : MonoBehaviour
         Invoke("StartSpawning", 0.5f);
     }
 
-    // Update is called once per frame
     void MakeInstance()
     {
         if(instance == null)
